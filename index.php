@@ -1,85 +1,29 @@
 <?php
 
-  $utakmice_u_toku = array(
-    array (
-      "tim1" => "Barselona",
-      "tim2" => "Real Madrid",
-      "golovi1" => "0",
-      "golovi2" => "2",
-    ),
-    array (
-      "tim1" => "Barselona",
-      "tim2" => "Real Madrid",
-      "golovi1" => "0",
-      "golovi2" => "2",
-    ),
-    array (
-      "tim1" => "Barselona",
-      "tim2" => "Real Madrid",
-      "golovi1" => "0",
-      "golovi2" => "2",
-    ),
-    array (
-      "tim1" => "Barselona",
-      "tim2" => "Real Madrid",
-      "golovi1" => "0",
-      "golovi2" => "2",
-    ),
-  );
+  $utakmice_u_toku = array();
+  $utakmice_predstojece = array();
+  $utakmice_zavrsene = array();
+  require "./Datebase/konekcija.php";
 
-  $utakmice_predstojece = array(
-    array (
-      "tim1" => "Barselona",
-      "tim2" => "Real Madrid",
-      "golovi1" => "0",
-      "golovi2" => "2",
-    ),
-    array (
-      "tim1" => "Barselona",
-      "tim2" => "Real Madrid",
-      "golovi1" => "0",
-      "golovi2" => "2",
-    ),
-    array (
-      "tim1" => "Barselona",
-      "tim2" => "Real Madrid",
-      "golovi1" => "0",
-      "golovi2" => "2",
-    ),
-    array (
-      "tim1" => "Barselona",
-      "tim2" => "Real Madrid",
-      "golovi1" => "0",
-      "golovi2" => "2",
-    ),
-  );
-
-  $utakmice_zavrsene = array(
-    array (
-      "tim1" => "Barselona",
-      "tim2" => "Real Madrid",
-      "golovi1" => "0",
-      "golovi2" => "2",
-    ),
-    array (
-      "tim1" => "Barselona",
-      "tim2" => "Real Madrid",
-      "golovi1" => "0",
-      "golovi2" => "2",
-    ),
-    array (
-      "tim1" => "Barselona",
-      "tim2" => "Real Madrid",
-      "golovi1" => "0",
-      "golovi2" => "2",
-    ),
-    array (
-      "tim1" => "Barselona",
-      "tim2" => "Real Madrid",
-      "golovi1" => "0",
-      "golovi2" => "2",
-    ),
-  );
+  $result = mysqli_query($conn, "SELECT * FROM utakmice");
+  if (mysqli_num_rows($result) > 0) {
+    // output data of each row
+    while($row = mysqli_fetch_assoc($result)) {
+      if($row["status"] == "u toku")
+      {
+        array_push($utakmice_u_toku, $row);
+      }
+      else if($row["status"] == "zavrsena")
+      {
+        array_push($utakmice_zavrsene, $row);
+      }
+      else {
+        array_push($utakmice_predstojece, $row); 
+      }
+    }
+  }
+  
+  mysqli_close($conn);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -101,7 +45,7 @@
     <?php 
         foreach ($utakmice_u_toku as $utakmica) {
           echo "
-            <div class='utakmica'> 
+            <div class='utakmica' id='" . $utakmica["id"] . "'> 
               <div class='tim'>
                 <span class='naziv'>" . $utakmica["tim1"] . "</span>
                 <span class='golovi'>" . $utakmica["golovi1"] . "</span>
@@ -121,7 +65,7 @@
       <?php 
         foreach ($utakmice_zavrsene as $utakmica) {
           echo "
-            <div class='utakmica'> 
+            <div class='utakmica' id='" . $utakmica["id"] . "'>
               <div class='tim'>
                 <span class='naziv'>" . $utakmica["tim1"] . "</span>
                 <span class='golovi'>" . $utakmica["golovi1"] . "</span>
@@ -141,7 +85,7 @@
       <?php 
         foreach ($utakmice_predstojece as $utakmica) {
           echo "
-            <div class='utakmica'> 
+            <div class='utakmica' id='" . $utakmica["id"] . "'>
               <div class='tim'>
                 <span class='naziv'>" . $utakmica["tim1"] . "</span>
                 <span class='golovi'>" . $utakmica["golovi1"] . "</span>
@@ -160,5 +104,6 @@
     <?php
       require './Components/footer.php';
     ?>
+    <script src="./Js/pocetna.js"></script>
 </body>
 </html>
